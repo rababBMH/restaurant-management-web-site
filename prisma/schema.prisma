@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Restaurant {
+  restaurant_id   Int     @id @default(autoincrement())
+  restaurant_name String
+  Description     String?
+  phone_number    String? @unique
+  email           String  @unique
+  password        String
+  location        String?
+  Stutus          String  @default("closed")
+  facebook_url    String? @unique
+  Instagram_url   String? @unique
+  Tiktok_url      String? @unique
+
+  //relation
+  Qrcode       QRCode?
+  menu         Menu_item[]
+  orders       Order[]
+  transactions Transaction[]
+  days_of_work WorkingHour[]
+}
+
+model QRCode {
+  id             Int        @id @default(autoincrement())
+  restaurant_id  Int        @unique
+  restaurant_url String     @unique
+  //relationshop
+  restaurant     Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
+}
+
+model Menu_item {
+  item_id          Int     @id @default(autoincrement())
+  restaurant_id    Int
+  item_name        String
+  price            Int
+  description      String?
+  category         String
+  image_url        String
+  number_of_orders Int
+
+  //relation 
+  restaurant_menu Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
+}
+
+model Order {
+  order_id      Int      @id @default(autoincrement())
+  restaurant_id Int
+  table_number  Int
+  stutus        String
+  total_price   Int
+  time          DateTime @default(now())
+
+  order_items       Order_item[]
+  //relation
+  restaurant_orders Restaurant   @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
+}
+
+model Order_item {
+  id       Int @id @default(autoincrement())
+  order_id Int
+  quantity Int @default(1)
+
+  //relation
+  order_list Order @relation(fields: [id], references: [order_id], onDelete: Cascade)
+}
+
+model Transaction {
+  id            Int      @id @default(autoincrement())
+  restaurant_id Int
+  date          DateTime @default(now())
+  type          String
+  category      String
+  Description   String?
+  amount        Int
+
+  transaction Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
+}
+
+model WorkingHour {
+  id            Int        @id @default(autoincrement())
+  restaurant_id Int
+  day           String
+  start_time    DateTime // only store the TIME part
+  end_time      DateTime
+  Hours         Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
+}
+
+model otp {
+  id        Int      @id @default(autoincrement())
+  email     String
+  code      String
+  expiredAt DateTime
+}
