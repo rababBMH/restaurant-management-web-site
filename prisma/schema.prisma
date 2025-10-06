@@ -24,25 +24,19 @@ model Restaurant {
   password        String
   location        String?
   Stutus          String  @default("closed")
+  Qrcode          String?
   facebook_url    String? @unique
   Instagram_url   String? @unique
   Tiktok_url      String? @unique
 
   //relation
-  Qrcode       QRCode?
   menu         Menu_item[]
   orders       Order[]
   transactions Transaction[]
   days_of_work WorkingHour[]
 }
 
-model QRCode {
-  id             Int        @id @default(autoincrement())
-  restaurant_id  Int        @unique
-  restaurant_url String     @unique
-  //relationshop
-  restaurant     Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
-}
+
 
 model Menu_item {
   item_id          Int     @id @default(autoincrement())
