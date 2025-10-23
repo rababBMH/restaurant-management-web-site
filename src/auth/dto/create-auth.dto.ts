@@ -26,7 +26,7 @@ export class SignUpDto extends LogInDto{
   
     @IsString()
     @IsNotEmpty()
-    restaurant_name : String
+    restaurant_name : string
 }
 
 

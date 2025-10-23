@@ -47,8 +47,9 @@ model Menu_item {
   category         String
   image_url        String
   number_of_orders Int
-
+  Isavailable        Boolean @default(true)
   //relation 
+  orders  Order_item[]
   restaurant_menu Restaurant @relation(fields: [restaurant_id], references: [restaurant_id], onDelete: Cascade)
 }
 
@@ -69,9 +70,10 @@ model Order_item {
   id       Int @id @default(autoincrement())
   order_id Int
   quantity Int @default(1)
-
+  menu_item_id Int 
   //relation
-  order_list Order @relation(fields: [id], references: [order_id], onDelete: Cascade)
+  order_list Order @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
+  Menu_order Menu_item @relation(fields: [menu_item_id], references: [item_id], onDelete: Cascade)
 }
 
 model Transaction {

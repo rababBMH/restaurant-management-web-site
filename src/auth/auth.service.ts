@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService, // ✅ MailService injected
+    private readonly mailService: MailService, 
   ) {}
 
   //// user registration

@@ -13,7 +13,7 @@ export class ProfileDto {
     @IsString()
     @MaxLength(10)
     @MinLength(10)
-    phone_number:String;
+    phone_number:string;
 ///location
     @ApiProperty({
         example:"rue de wiam 212-sidi bel abbes",
@@ -21,7 +21,7 @@ export class ProfileDto {
         required:true
     })
     @IsString()
-    location:String;
+    location:string;
 /// facebook url
     @ApiProperty({
         example:"https://www.facebook.com/pizzapalace",
@@ -58,6 +58,6 @@ export class ProfileDto {
     })
     @IsOptional()
     @IsString()
-    Description? : String;
+    Description? : string;
 
 }

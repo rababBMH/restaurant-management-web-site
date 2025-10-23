@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: .
+    container_name: nest-backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://rabab-boumahdi:qwerty1234%3B%3B%3B@db:5432/restaurant_management"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules 
+    command: npm run start:dev
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: rabab-boumahdi
+      POSTGRES_PASSWORD: "qwerty1234;;;"
+      POSTGRES_DB: restaurant_management
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backup.dump:/docker-entrypoint-initdb.d/backup.dump
+
+volumes:
+  pgdata:
