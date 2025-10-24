@@ -61,3 +61,14 @@ export class ProfileDto {
     Description? : string;
 
 }
+
+export class UpdateProfileDto extends ProfileDto {
+    @ApiProperty({
+        example:"Gourmet Bistro",
+        description:"updated restaurant name",
+        required:true
+    })
+    
+    @IsString()
+    restaurant_name? : string;
+}

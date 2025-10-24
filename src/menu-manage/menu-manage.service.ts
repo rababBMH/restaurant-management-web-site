@@ -21,13 +21,27 @@ export class MenuManageService {
     return {message:"item deleted successfuly"}   
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} menuManage`;
+  async updateItem(updatedItemDto:CreateMenuManageDto,item_id:number){
+    const updatedItem=await prisma.menu_item.findUnique({where:{item_id:item_id}})
+    if (!updatedItem){
+      throw new NotFoundException(`menu item with id : ${item_id}`)
+    } 
+    await prisma.menu_item.update({where:{item_id:item_id},data:{
+      item_name:updatedItemDto.item_name,
+      price:updatedItemDto.price,
+      description:updatedItemDto.description,
+      category:updatedItemDto.category,
+      image_url:updatedItemDto.image_url
+    }})
+    return {message:"item updated successfuly"}
+    
   }
-
-  
-
-  remove(id: number) {
-    return `This action removes a #${id} menuManage`;
+  async markItemAvailability(item_id:number,isAvailable:boolean){
+    const item=await prisma.menu_item.findUnique({where:{item_id:item_id}})
+    if(!item){
+      throw new NotFoundException(`menu item with id : ${item_id}`)
+    }
+    await prisma.menu_item.update({where:{item_id:item_id},data:{Isavailable:isAvailable}})
+    return {message:"item availability updated successfully"}
   }
 }

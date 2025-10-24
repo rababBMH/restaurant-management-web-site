@@ -24,19 +24,25 @@ export class MenuManageController {
   @ApiOperation({summary:"delete a menu item"})
   @ApiResponse({status:201,description:"deleted successfuly"})
   @ApiResponse({status:400,description:"failed to delete Item"})
-  findAll(@Param('id') id:number) {
+  DeleteOne(@Param('id') id:number) {
     return this.menuManageService.deleteItem(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.menuManageService.findOne(+id);
+  @Patch('Update-Item')
+  @ApiBearerAuth()
+  @ApiOperation({summary:"update a menu item"})
+  @ApiResponse({status:201,description:"updated successfuly"})
+  @ApiResponse({status:400,description:"failed to update Item"})
+  UpdateOne(@Param('id') id: number, @Body() updatedItemDto:CreateMenuManageDto) {
+    return this.menuManageService.updateItem(updatedItemDto,id);
   }
 
-  
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.menuManageService.remove(+id);
+  @Patch('Mark-Item-Availability')
+  @ApiBearerAuth()
+  @ApiOperation({summary:"mark item availability"})
+  @ApiResponse({status:201,description:"item availability updated successfuly"})
+  @ApiResponse({status:400,description:"failed to update item availability"})
+  MarkAvailability(@Param('id') id: number, @Body('isAvailable') isAvailable:boolean) {
+    return this.menuManageService.markItemAvailability(id,isAvailable);
   }
 }
