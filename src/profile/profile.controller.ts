@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards ,Request} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards ,Request, Query} from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { ProfileDto } from './dto/create-profile.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateProfileDto } from './dto/create-profile.dto';  
+import { categoryDto } from './dto/create-profile.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { promises } from 'dns';
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
@@ -17,37 +20,27 @@ export class ProfileController {
     return this.profileService.createProfile(ProfileDto,req.user.email);
   }
 
-
-@ApiBearerAuth() 
 @ApiOperation({summary:'get restaurant Info'})
 @ApiResponse({status:200,description:"page loaded succussfully"})
 @ApiResponse({status:401,description:"Unauthorized"})
-@Get('getRestaurantPage')
-  getrestaurantInfo(@Request() req) :any {
-    return this.profileService.getProfileInfo(req.user.restaurant_id)
-  }
-  
-
-
-
-@ApiBearerAuth() 
-@ApiOperation({summary:'get restaurant page'})
-@ApiResponse({status:200,description:"page loaded succussfully"})
-@ApiResponse({status:401,description:"Unauthorized"})
-@Get('getRestaurantMenu')
-  getrestaurantmenu(@Request() req,@Body() category:string) :any {
-    return this.profileService.getMenuByCategory(req.user.restaurant_id,category)
+@Get('getRestaurantPage/:restaurant_id')
+  async getrestaurantInfo(@Param('restaurant_id') restaurant_id:number,@Query('category') category: categoryDto) :Promise<any> {
+    const info = await this.profileService.getProfileInfo(Number(restaurant_id));
+    const menu = await this.profileService.getMenuByCategory(Number(restaurant_id),category);
+    return {info, menu};
   }
 
+
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth() 
 @ApiOperation({summary:'get restaurant page'})
 @ApiResponse({status:200,description:"page loaded succussfully"})
 @ApiResponse({status:401,description:"Unauthorized"})
 @Get('getRestaurantMenuforAdmin')
-  getrestaurantmenuforAdmin(@Request() req,@Body() category:string) :any {
+  getrestaurantmenuforAdmin(@Request() req,@Query('category') category: categoryDto) :any {
     return this.profileService.getMenuByCategoryforAdmin(req.user.restaurant_id,category)
   }  
-
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth() 
 @ApiOperation({summary:'get restaurant settings'})
 @ApiResponse({status:200,description:"settings loaded succussfully"})
@@ -56,13 +49,13 @@ export class ProfileController {
   getSettings(@Request () req) :any {
     return this.profileService.getSettings(req.user.restaurant_id)
   }  
-
+@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth() 
 @ApiOperation({summary:'update restaurant settings'})
 @ApiResponse({status:200,description:"settings updated succussfully"})
 @ApiResponse({status:401,description:"Unauthorized"})
 @Patch('updateSettingsrestaurant')
-  updateSettings(@Request () req,@Body() profile:ProfileDto) :any {
+  updateSettings(@Request () req,@Body() profile:UpdateProfileDto) :any {
     return this.profileService.updateSettings(req.user.restaurant_id,profile)
   }
 }

@@ -23,7 +23,10 @@ export class LogInDto{
     password:string
 }
 export class SignUpDto extends LogInDto{
-  
+  @ApiProperty({
+    example:"Pizza Palace",
+    description:"Name of the restaurant"
+  })
     @IsString()
     @IsNotEmpty()
     restaurant_name : string

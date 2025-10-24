@@ -72,3 +72,14 @@ export class UpdateProfileDto extends ProfileDto {
     @IsString()
     restaurant_name? : string;
 }
+
+export class categoryDto{
+    @ApiProperty({
+        example:"pizza",
+        description:"category of the menu items to be fetched",
+        required:false
+    })
+    
+    @IsString()
+    category:string;  
+}

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/create-profile.dto';  
-import { PrismaClient, Restaurant } from '@prisma/client';
+import { categoryDto } from './dto/create-profile.dto';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -18,7 +19,7 @@ export class ProfileService {
     await prisma.restaurant.update({where:{email},data:{Description:Description,phone_number:phone_number,location:location,facebook_url:facebook_url,Instagram_url:Instagram_url,Tiktok_url:Tiktok_url}})
   }
   async getProfileInfo(restaurant_id:number){
-    const restaurant=await prisma.restaurant.findUnique({where:{restaurant_id:restaurant_id}})
+    const restaurant=await prisma.restaurant.findUnique({where:{restaurant_id}})
     if(!restaurant){
       throw new NotFoundException("restaurant not found")
     }
@@ -30,9 +31,9 @@ export class ProfileService {
 
     
 }
-  async getMenuByCategory(restaurant_id: number, category: string) {
+  async getMenuByCategory(restaurant_id: number, categoryDto: categoryDto) {
   let menuCategory;
-
+  const { category } = categoryDto||{category:"all"};
   if (category === "all") {
     menuCategory = await prisma.menu_item.findMany({
       where: { restaurant_id, Isavailable: true },
@@ -55,9 +56,9 @@ export class ProfileService {
     image_url: item.image_url,
   }));
 }
-  async getMenuByCategoryforAdmin(restaurant_id: number, category: string) {
+  async getMenuByCategoryforAdmin(restaurant_id: number, categoryDto: categoryDto) {
   let menuCategory;
-
+  const { category } = categoryDto; 
   if (category === "all") {
     menuCategory = await prisma.menu_item.findMany({
       where: { restaurant_id},
@@ -85,7 +86,7 @@ export class ProfileService {
 
 
 async getSettings(restaurant_id:number){
-  const restaurant=await prisma.restaurant.findUnique({where:{restaurant_id}})
+  const restaurant=await prisma.restaurant.findUnique({where:{restaurant_id:restaurant_id}})
   if(!restaurant){
     throw new NotFoundException("restaurant not found")
   }

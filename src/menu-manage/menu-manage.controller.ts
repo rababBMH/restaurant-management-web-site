@@ -19,22 +19,22 @@ export class MenuManageController {
   }
 
   
-  @Delete('Delete-Item')
+  @Delete('Delete-Item/:item_id')
   @ApiBearerAuth()
   @ApiOperation({summary:"delete a menu item"})
   @ApiResponse({status:201,description:"deleted successfuly"})
   @ApiResponse({status:400,description:"failed to delete Item"})
-  DeleteOne(@Param('id') id:number) {
-    return this.menuManageService.deleteItem(id);
+  DeleteOne(@Param('item_id') item_id:number) {
+    return this.menuManageService.deleteItem(Number(item_id));
   }
 
-  @Patch('Update-Item')
+  @Patch('Update-Item/:item_id')
   @ApiBearerAuth()
   @ApiOperation({summary:"update a menu item"})
   @ApiResponse({status:201,description:"updated successfuly"})
   @ApiResponse({status:400,description:"failed to update Item"})
-  UpdateOne(@Param('id') id: number, @Body() updatedItemDto:CreateMenuManageDto) {
-    return this.menuManageService.updateItem(updatedItemDto,id);
+  UpdateOne(@Param('item_id') id: number, @Body() updatedItemDto:CreateMenuManageDto) {
+    return this.menuManageService.updateItem(updatedItemDto,Number(id));
   }
 
   @Patch('Mark-Item-Availability')

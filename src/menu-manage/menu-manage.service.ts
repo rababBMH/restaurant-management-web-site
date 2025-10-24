@@ -12,21 +12,21 @@ export class MenuManageService {
 
 }
 
-  async deleteItem(id:number) {
-    const deletedItem=await prisma.menu_item.findUnique({where:{item_id:id}})
+  async deleteItem(item_id:number) {
+    const deletedItem=await prisma.menu_item.findUnique({where:{item_id}})
     if (!deletedItem){
-      throw new NotFoundException(`menu item with id : ${id}`)
+      throw new NotFoundException(`menu item with id : ${item_id}`)
     } 
-    await prisma.menu_item.delete({where:{item_id:id}}) 
+    await prisma.menu_item.delete({where:{item_id}}) 
     return {message:"item deleted successfuly"}   
   }
 
   async updateItem(updatedItemDto:CreateMenuManageDto,item_id:number){
-    const updatedItem=await prisma.menu_item.findUnique({where:{item_id:item_id}})
+    const updatedItem=await prisma.menu_item.findUnique({where:{item_id}})
     if (!updatedItem){
       throw new NotFoundException(`menu item with id : ${item_id}`)
     } 
-    await prisma.menu_item.update({where:{item_id:item_id},data:{
+    await prisma.menu_item.update({where:{item_id},data:{
       item_name:updatedItemDto.item_name,
       price:updatedItemDto.price,
       description:updatedItemDto.description,
