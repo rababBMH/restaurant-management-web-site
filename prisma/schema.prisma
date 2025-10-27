@@ -46,7 +46,6 @@ model Menu_item {
   description      String?
   category         String
   image_url        String
-  number_of_orders Int
   Isavailable        Boolean @default(true)
   //relation 
   orders  Order_item[]
@@ -57,7 +56,7 @@ model Order {
   order_id      Int      @id @default(autoincrement())
   restaurant_id Int
   table_number  Int
-  stutus        String
+  stutus        String   @default("pending")
   total_price   Int
   time          DateTime @default(now())
 
